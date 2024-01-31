@@ -17,6 +17,7 @@ async fn get_sysinfo() -> impl Responder {
     let res = serde_json::to_string_pretty(&res).unwrap();
     HttpResponse::Ok()
         .append_header(("content-type", "application/json"))
+        .append_header(("access-control-allow-origin", "*"))
         .body(res)
 }
 
