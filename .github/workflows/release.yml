@@ -39,11 +39,11 @@ jobs:
       # It uses the `context` parameter to define the build's context as the set of files located in the specified path. For more information, see "[Usage](https://github.com/docker/build-push-action#usage)" in the README of the `docker/build-push-action` repository.
       # It uses the `tags` and `labels` parameters to tag and label the image with the output from the "meta" step.
       - name: Download nix
-        uses: cachix/install-nix-action@v22
+        uses: DeterminateSystems/nix-installer-action@main
 
-      - name: build image
-        run: nix build .#dockerImage && docker load < ./result && docker tag $(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]') ${{ env.DOCKER_METADATA_OUTPUT_TAGS }}
+      - uses: DeterminateSystems/magic-nix-cache-action@v2
+      - run: nix build .#dockerImage && docker load < ./result && docker tag $(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]') ${{ env.DOCKER_METADATA_OUTPUT_TAGS }}
 
       - name: Push docker image
         run: |
-          docker image ls  && docker push --all-tags  ${{ env.DOCKER_METADATA_OUTPUT_TAGS }}
+          docker image ls  && docker push --all-tags
