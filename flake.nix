@@ -28,7 +28,7 @@
           };
           dockerImage =  pkgs.dockerTools.buildImage {
             name = "hydrophobefireman/minimal-system-status";
-            tag = "release";
+            tag = "latest";
             copyToRoot = with pkgs.dockerTools; [
                   bin
                   # binSh
