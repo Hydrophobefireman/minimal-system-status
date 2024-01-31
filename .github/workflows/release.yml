@@ -42,8 +42,8 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@main
 
       - uses: DeterminateSystems/magic-nix-cache-action@v2
-      - run: nix build .#dockerImage && docker load < ./result && docker tag ${{ env.DOCKER_METADATA_OUTPUT_TAGS }}
+      - run: nix build .#dockerImage && docker load < ./result && docker tag $(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]') ${{ env.DOCKER_METADATA_OUTPUT_TAGS }}
 
       - name: Push docker image
         run: |
-          docker image ls  && docker push --all-tags
+          docker image ls  && docker push ${{ env.DOCKER_METADATA_OUTPUT_TAGS }}
