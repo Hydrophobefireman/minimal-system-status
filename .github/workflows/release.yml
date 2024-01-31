@@ -19,7 +19,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-      #
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -43,8 +42,8 @@ jobs:
         uses: cachix/install-nix-action@v22
 
       - name: build image
-        run: nix build .#dockerImage && docker load < ./result
+        run: nix build .#dockerImage && docker load < ./result && docker tag $(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]') ${{ env.DOCKER_METADATA_OUTPUT_TAGS }}
 
       - name: Push docker image
         run: |
-          docker push --all-tags ghcr.io/$(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]')
+          docker image ls  && docker push --all-tags  ${{ env.DOCKER_METADATA_OUTPUT_TAGS }}
