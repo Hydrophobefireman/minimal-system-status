@@ -12,14 +12,18 @@ pub struct NetworkStats {
     name: String,
     sent: String,
     received: String,
+    sent_num: u64,
+    received_num: u64,
 }
 #[derive(Debug, Serialize, Deserialize, Default, new)]
 pub struct DiskStats {
-    space: String,
-    total: String,
+    available_space: String,
+    total_space: String,
     name: String,
     is_removable: bool,
     mount_point: String,
+    available_space_num: u64,
+    total_space_num: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize, Default, new)]
@@ -31,7 +35,9 @@ pub struct CPUStats {
 #[derive(Debug, Serialize, Deserialize, Default, new)]
 pub struct RamInfo {
     total: String,
-    available: String,
+    used: String,
+    total_num: u64,
+    used_num: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize, Default, new)]

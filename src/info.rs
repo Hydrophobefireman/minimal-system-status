@@ -12,11 +12,14 @@ pub fn get_stats() -> SysStatus {
     let mut networks = NETWORKS.lock().unwrap();
     sys.refresh_all();
 
-    // RAM and swap information:
-    let total_ram = human_bytes(sys.total_memory() as f64);
-    let available_ram = human_bytes(sys.used_memory() as f64);
-
-    let ram = RamInfo::new(total_ram, available_ram);
+    let ram = {
+        // RAM and swap information:
+        let total_ram_num = sys.total_memory();
+        let used_ram_num = sys.used_memory();
+        let total_ram = human_bytes(total_ram_num as f64);
+        let used_ram = human_bytes(used_ram_num as f64);
+        RamInfo::new(total_ram, used_ram, total_ram_num, used_ram_num)
+    };
 
     // system information:
     let system_info = SystemInfo::new(
@@ -35,13 +38,23 @@ pub fn get_stats() -> SysStatus {
     let disks = disks
         .into_iter()
         .map(|disk| {
-            let space = human_bytes(disk.available_space() as f64);
-            let total = human_bytes(disk.total_space() as f64);
+            let available_space_num = disk.available_space();
+            let total_space_num = disk.total_space();
+            let space = human_bytes(available_space_num as f64);
+            let total = human_bytes(total_space_num as f64);
 
             let name = disk.name().to_string_lossy().into();
             let removable = disk.is_removable();
             let mount_point = disk.mount_point().to_string_lossy().into();
-            DiskStats::new(space, total, name, removable, mount_point)
+            DiskStats::new(
+                space,
+                total,
+                name,
+                removable,
+                mount_point,
+                available_space_num,
+                total_space_num,
+            )
         })
         .collect::<Vec<_>>();
 
@@ -51,10 +64,14 @@ pub fn get_stats() -> SysStatus {
     let networks = networks
         .into_iter()
         .map(|(interface, data)| {
+            let total_transmitted_num = data.total_transmitted();
+            let total_received_num = data.total_received();
             NetworkStats::new(
                 interface.clone(),
-                human_bytes(data.total_transmitted() as f64),
-                human_bytes(data.total_received() as f64),
+                human_bytes(total_transmitted_num as f64),
+                human_bytes(total_received_num as f64),
+                total_transmitted_num,
+                total_received_num,
             )
         })
         .collect::<Vec<_>>();

@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  api:
+    image: hydrophobefireman/minimal-system-status
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      - PORT=12000

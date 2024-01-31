@@ -11,7 +11,7 @@ lazy_static! {
     static ref NETWORKS: Mutex<Networks> = Mutex::new(Networks::new_with_refreshed_list());
 }
 
-#[get("/sys")]
+#[get("/")]
 async fn get_sysinfo() -> impl Responder {
     let res = get_stats();
     let res = serde_json::to_string_pretty(&res).unwrap();
