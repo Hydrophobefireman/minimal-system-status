@@ -22,8 +22,3 @@ docker:
 
 clean:
     rm -rf result
-
-compose:
-    #!/bin/bash -eux
-    just docker
-    docker compose up -d --build
