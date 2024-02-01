@@ -26,4 +26,4 @@ clean:
 compose:
     #!/bin/bash -eux
     just docker
-    docker compose up -d
+    docker compose up -d --build

@@ -27,9 +27,18 @@ pub struct DiskStats {
 }
 
 #[derive(Debug, Serialize, Deserialize, Default, new)]
+pub struct CPUInfo {
+    name: String,
+    vendor_id: String,
+    brand: String,
+    frequency: u64,
+}
+
+#[derive(Debug, Serialize, Deserialize, Default, new)]
 pub struct CPUStats {
     count: usize,
     usage: f32,
+    cpus: Vec<CPUInfo>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Default, new)]

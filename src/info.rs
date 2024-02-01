@@ -3,7 +3,9 @@ use human_bytes::human_bytes;
 use sysinfo::{Components, Disks, System};
 
 use crate::{
-    common::{CPUStats, ComponentStats, DiskStats, NetworkStats, RamInfo, SysStatus, SystemInfo},
+    common::{
+        CPUInfo, CPUStats, ComponentStats, DiskStats, NetworkStats, RamInfo, SysStatus, SystemInfo,
+    },
     NETWORKS, SYS,
 };
 
@@ -31,7 +33,19 @@ pub fn get_stats() -> SysStatus {
 
     // Number of CPUs:
     sys.refresh_cpu();
-    let cpu_stats = CPUStats::new(sys.cpus().len(), sys.global_cpu_info().cpu_usage());
+    let cpus = sys
+        .cpus()
+        .into_iter()
+        .map(|cpu| {
+            CPUInfo::new(
+                cpu.name().into(),
+                cpu.vendor_id().into(),
+                cpu.brand().into(),
+                cpu.frequency(),
+            )
+        })
+        .collect::<Vec<_>>();
+    let cpu_stats = CPUStats::new(sys.cpus().len(), sys.global_cpu_info().cpu_usage(), cpus);
 
     // all disks' information:
     let disks = Disks::new_with_refreshed_list();

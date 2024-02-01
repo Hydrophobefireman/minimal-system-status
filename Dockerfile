@@ -1,0 +1,1 @@
+FROM minimal-system-status-nix:latest

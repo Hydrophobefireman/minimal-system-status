@@ -27,7 +27,7 @@
             cargoLock.lockFile = ./Cargo.lock;
           };
           dockerImage =  pkgs.dockerTools.buildImage {
-            name = "hydrophobefireman/minimal-system-status";
+            name = "minimal-system-status-nix"; # Dockerfile will simply use this image as is
             tag = "latest";
             copyToRoot = with pkgs.dockerTools; [
                   bin

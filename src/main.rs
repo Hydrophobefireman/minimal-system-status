@@ -1,6 +1,7 @@
 pub mod common;
 pub mod info;
-use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{get, middleware::Logger, App, HttpResponse, HttpServer, Responder};
+use env_logger::Env;
 use info::get_stats;
 use lazy_static::lazy_static;
 use std::{env, sync::Mutex, thread::sleep};
@@ -27,11 +28,13 @@ async fn main() -> std::io::Result<()> {
     sleep(sysinfo::MINIMUM_CPU_UPDATE_INTERVAL);
     SYS.lock().unwrap().refresh_all();
     NETWORKS.lock().unwrap().refresh_list();
+    env_logger::init_from_env(Env::default().default_filter_or("info"));
+
     let port = env::var("PORT")
         .unwrap_or("8080".into())
         .parse::<u16>()
         .unwrap();
-    HttpServer::new(|| App::new().service(get_sysinfo))
+    HttpServer::new(|| App::new().wrap(Logger::default()).service(get_sysinfo))
         .bind(("0.0.0.0", port))?
         .run()
         .await
