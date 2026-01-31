@@ -7,3 +7,5 @@ services:
     restart: unless-stopped
     environment:
       - PORT=12000
+    volumes:
+      - /mnt/hdd:/hdd:ro
